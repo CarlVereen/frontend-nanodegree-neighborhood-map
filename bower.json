@@ -1,0 +1,25 @@
+{
+  "name": "bower.json",
+  "version": "0.0.0",
+  "authors": [
+    "Carl Vereen <carlvereen@gmail.com>"
+  ],
+  "description": "bower JSON file for libraries",
+  "main": "index.html",
+  "moduleType": [
+    "es6"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "knockout": "~3.3.0",
+    "masonry": "desandro/masonry#~3.3.1"
+  }
+}
