@@ -1,174 +1,96 @@
-//This is the googleAPI interaction file
-//starting location Tokyo, Japan 35.6833° N, 139.6833° E
-//API key AIzaSyD61th9_qlpEsR7QjNn4UrpnswZgEReK3E
-
-//Set global variables
 var map;
-var markerLocations = [];
+var tokyo = { lat: 35.6833, lng: 139.6833};
 
+/**
+ * The CenterControl adds a control to the map that recenters the map on
+ * tokyo.
+ * @constructor
+ * @param {!Element} controlDiv
+ * @param {!google.maps.Map} map
+ * @param {?google.maps.LatLng} center
+ */
+function CenterControl(controlDiv, map, center) {
+  // We set up a variable for this since we're adding event listeners later.
+  var control = this;
 
-//initialize google maps centered on Tokyo, disable the default UI features
-function initialize() {
-	var mapOptions = {
-		center: { lat: 35.6833, lng: 139.6833},
-		zoom: 10,
-    mapTypeId: google.maps.MapTypeId.HYBRID,
-    disableDefaultUI: true
-	};
-	map = new google.maps.Map(document.getElementById('map-canvas'),
-			mapOptions);
+  // Set the center property upon construction
+  control.center_ = center;
+  controlDiv.style.clear = 'both';
+
+  // Set CSS for the control border
+  var goCenterUI = document.createElement('div');
+  goCenterUI.id = 'goCenterUI';
+  goCenterUI.title = 'Click to recenter the map';
+  controlDiv.appendChild(goCenterUI);
+
+  // Set CSS for the control interior
+  var goCenterText = document.createElement('div');
+  goCenterText.id = 'goCenterText';
+  goCenterText.innerHTML = 'Center Map';
+  goCenterUI.appendChild(goCenterText);
+
+  // Set CSS for the setCenter control border
+  var setCenterUI = document.createElement('div');
+  setCenterUI.id = 'setCenterUI';
+  setCenterUI.title = 'Click to change the center of the map';
+  controlDiv.appendChild(setCenterUI);
+
+  // Set CSS for the control interior
+  var setCenterText = document.createElement('div');
+  setCenterText.id = 'setCenterText';
+  setCenterText.innerHTML = 'Set Center';
+  setCenterUI.appendChild(setCenterText);
+
+  // Set up the click event listener for 'Center Map': Set the center of the map
+  // to the current center of the control.
+  goCenterUI.addEventListener('click', function() {
+    var currentCenter = control.getCenter();
+    map.setCenter(currentCenter);
+  });
+
+  // Set up the click event listener for 'Set Center': Set the center of the
+  // control to the current center of the map.
+  setCenterUI.addEventListener('click', function() {
+    var newCenter = map.getCenter();
+    control.setCenter(newCenter);
+  });
 }
-google.maps.event.addDomListener(window, 'load', initialize);
 
-//add fun places to visit and other markers of interest
-function addMarker(location){
+/**
+ * Define a property to hold the center state.
+ * @private
+ */
+CenterControl.prototype.center_ = null;
 
-  //add fancy location markers
-  // var iconBase = '/img/';
-  // var icons = {
-  //   parking: {
-  //     icon: iconBase + 'automotive.png'
-  //   },
-  //   library: {
-  //     icon: iconBase + 'libraries.png'
-  //   },
-  //   museums: {
-  //     icon: iconBase + 'museums.png'
-  //   },
-  //   restaurants: {
-  //     icon: iconBase + 'restaurants.png'
-  //   },
-  //   shows: {
-  //     icon: iconBase + 'tickets.png'
-  //   }
-  // };
-  //
-  // function addMarker(feature) {
-  //   var marker = new google.maps.Marker({
-  //     position: feature.position,
-  //     icon: icons[feature.type].icon,
-  //     map: map
-  //   });
-  // }
+/**
+ * Gets the map center.
+ * @return {?google.maps.LatLng}
+ */
+CenterControl.prototype.getCenter = function() {
+  return this.center_;
+};
 
-  var infoWindow = new google.maps.InfoWindow();
+/**
+ * Sets the map center.
+ * @param {?google.maps.LatLng} center
+ */
+CenterControl.prototype.setCenter = function(center) {
+  this.center_ = center;
+};
 
-    //setup marker window and options
-    function makeInfoWindow(marker){
-  		//Create DOM elements for info window
-  		var infoWindowContent = '<div class="info_content">';
-  		infoWindowContent += '<h4>' + marker.title + '</h4>';
-  		infoWindowContent += '<p>' + marker.phone + '</p>';
-  		infoWindowContent += '<p class="review"><img src="' + marker.pic + '">' + marker.details + '</p>';
-  		infoWindowContent += '</div>';
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 12,
+    center: tokyo
+  });
 
-      //set Infowindow to use custom information
-    	infoWindow.setContent(String(infoWindowContent));
+  // Create the DIV to hold the control and call the CenterControl() constructor
+  // passing in this DIV.
+  var centerControlDiv = document.createElement('div');
+  var centerControl = new CenterControl(centerControlDiv, map, tokyo);
 
-    	infoWindow.open(map, marker);
-    }
-
-  	//Function delete all markers on the map
-  	function deleteAllMarkers(){
-
-    	for(var i = 0, max=markerLocations.length; i < max; i++ ) {
-  	  	markerLocations[i].setMap(null);
-  	  }
-
-  	  markerLocations = [];
-    }
-
-    if(markerLocations.length > 0){
-  	  deleteAllMarkers();
-    }
-
-
-    for(var i = 0, max=location.length; i < max; i++ ) {
-
-      var position = new google.maps.LatLng(location[i][2], location[i][3]);
-
-      var marker = new google.maps.Marker({
-  	        position: position,
-  	        map: map,
-  					animation: google.maps.Animation.DROP,
-            //icon: to do change the icons of the markers
-  	        title: location[i][0],
-  	        phone: location[i][1],
-  	        pic: location[i][4],
-  	        details: location[i][5]
-  		    });
-
-      markerLocations.push(marker);
-
-  		//add mouseover event for infowindow to display
-  	  google.maps.event
-  	  .addListener(marker, 'mouseover', (function(marker, i) {
-        return function() {
-          makeInfoWindow(marker);
-        };
-  	  })(marker, i));
-
-  		//add click event for infowindow
-  	  google.maps.event
-  	  .addListener(marker, 'click', (function(marker, i){
-  			return function(){
-  	      makeInfoWindow(marker);
-  				toggleBounce(marker, i);
-  			};
-  		})(marker, i));
-    }
-
-  	//animate marker for yelp
-  	function toggleBounce(marker, i) {
-
-  	  var yelpMarkerDetailUl =  $('.yelp-list').find('ul'),
-  	  		yelpMarkerDetail = yelpMarkerDetailUl.find('li'),
-  	  		yelpMarkerDetailPos = 212 * i,
-  	  		activeYelpMarkerDetail = yelpMarkerDetail.eq(i);
-
-  		// check if marker has animation attribute
-  	  if (marker.getAnimation() != null) {
-  		  marker.setAnimation(null);
-  	    yelpMarkerDetailUl.removeClass('show');
-  	    activeYelpMarkerDetail.removeClass('active');
-  		//If marker does not have animation attribue give it to marker add to yelp list, remove animation from any other marker
-
-  	  } else {
-  			for(animatedMarker in markerLocations){
-  				// iterate through all the markers and see if it has the animation attribute
-  				var isMoving = markerLocations[animatedMarker].getAnimation();
-
-  				if(isMoving && animatedMarker !== i){
-  					markerLocations[animatedMarker].setAnimation(null);
-  				}
-  			}
-
-
-  	    marker.setAnimation(google.maps.Animation.BOUNCE);
-  	    yelpMarkerDetailUl.addClass('show').animate({
-  		    scrollTop: yelpMarkerDetailPos
-  		  }, 300);
-  		  yelpMarkerDetailUl.find('.active').removeClass('active');
-  	    activeYelpMarkerDetail.addClass('active');
-  	  }
-  	}
-
-
-  	$('.results').find('li').click(function(){
-  		// get index of clicked element
-  		var pos = $(this).index();
-  		// iterate through markerLocations array
-  		for(animatedMarker in markerLocations){
-  			var isMoving = markerLocations[animatedMarker].getAnimation();
-  			// if marker is animated, remove animation
-  			if(isMoving && animatedMarker !== pos){
-  				markerLocations[animatedMarker].setAnimation(null);
-  			}
-  		}
-
-  		markerLocations[pos].setAnimation(google.maps.Animation.BOUNCE);
-  		makeInfoWindow(markerLocations[pos]);
-  		$('.results').find('.active').removeClass('active');
-  		$(this).addClass('active');
-  	});
-  }
+  centerControlDiv.index = 1;
+  centerControlDiv.style['padding-top'] = '10px';
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+}
+google.maps.event.addDomListener(window, 'load', initMap);
