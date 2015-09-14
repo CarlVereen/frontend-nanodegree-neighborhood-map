@@ -140,4 +140,112 @@ function initMap() {
 }
 google.maps.event.addDomListener(window, 'load', initMap);
 
-// ===================================================================
+/* ===================================================================
+* Yelp api access
+*/
+
+// Request API access: http://www.yelp.com/developers/getting_started/api_access
+
+var yelp = {
+  consumer_key: "g4G8OopnF2BWj4yglgeHKw",
+  consumer_secret: "M3Wyy0015F46ub0CW-pYwC8JDZc",
+  token: "YHEFS0VFj-8ZGvFg4QnCoSQML9K_sloW",
+  token_secret: "_nLafuo0yeGXlRp6zS3zejo-3nU"
+};
+
+//declare namespace
+var yoh = {};
+
+//array to hold yelp markers
+var yelpMarkers = [];
+
+//defines bounding box of all locations
+var bounds;
+
+//info window
+var infowindow = new google.maps.InfoWindow();
+
+//trace function for debugging
+function trace(message)
+{
+    if (typeof console != 'undefined')
+    {
+        console.log(message);
+    }
+}
+
+//toggle array layers on/off
+yoh.toggleArrayLayer = function(arraylayer)
+{
+    if (arraylayer) {
+        for (i in arraylayer) {
+            if (arraylayer[i].getVisible() == true)
+            {
+                arraylayer[i].setMap(null);
+                arraylayer[i].visible = false;
+            }
+            else
+            {
+                arraylayer[i].setMap(map);
+                arraylayer[i].visible = true;
+            }
+        }
+    }
+}
+
+//Function to create yelp marker
+yoh.createYelpMarker = function(i,latitude,longitude,title, infowindowcontent)
+{
+    var markerLatLng = new google.maps.LatLng(latitude,longitude);
+
+    //extent bounds for each stop and adjust map to fit to it
+    bounds.extend(markerLatLng);
+    map.fitBounds(bounds);
+
+    yelpMarkers[i] = new google.maps.Marker({
+        position: markerLatLng,
+        map: map,
+        title: title,
+        icon: 'http://yohman.bol.ucla.edu/images/yelp.png'
+    });
+
+    //add an onclick event
+    google.maps.event.addListener(yelpMarkers[i], 'click', function() {
+        infowindow.setContent(infowindowcontent);
+        infowindow.open(map,yelp[i]);
+    });
+}
+
+//function to get data from YELP
+yoh.getYelp = function(term)
+{
+    bounds = new google.maps.LatLngBounds ();
+    $.getJSON('http://api.yelp.com/business_review_search?lat='+map.getCenter().lat()+'&long='+map.getCenter().lng()+'&limit=20&ywsid=g4G8OopnF2BWj4yglgeHKw'+term+'&callback=?',
+        function(data)
+        {
+            $.each(data.businesses, function(i,item){
+                trace(item);
+                infowindowcontent = '<strong>'+item.name+'</strong><br>';
+                infowindowcontent += '<img src="'+item.photo_url+'"><br>';
+                infowindowcontent += '<a href="'+item.url+'" target="_blank">see it on yelp</a>';
+
+                yoh.createYelpMarker(i,item.latitude,item.longitude,item.name, infowindowcontent);
+            });
+        }
+    );
+};
+
+//Function that gets run when the document loads
+yoh.initialize = function()
+{
+    var latlng = new google.maps.LatLng(34.0194543,-118.4911912);
+    var myOptions = {
+        zoom: 12,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    //Sample call for yelp data for cafe's
+    yoh.getYelp('cafe');
+};

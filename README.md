@@ -5,7 +5,7 @@ Neighborhood map project 5 is developed for Front-End Nanodegree at Udacity.
 * This project is built using Google Maps API, Foursquare API, Yelp API and knockoutjs framework.
   Features Included:
     * A full-screen map using the Google Maps API.
-    * Map markers identifying my favorite locations within Aurora neighborhood.
+    * Map markers identifying the places I want to visit in the Tokyo neighborhood.
     * Yelp Search bar functionality.
     * Foursquare API is used to show related info. of the location.
 
@@ -28,3 +28,5 @@ References:
 [Udacity Intro to Ajax](https://www.udacity.com/course/ud110)
 
 [subratrout's Neighborrhood map](http://subratrout.github.io/neighborhood-map)
+
+[olalonde node.js](https://github.com/olalonde/node-yelp)
