@@ -16,10 +16,15 @@ function MyViewModel() {
         lat: ko.observable(40.76),
         lng:ko.observable(-73.98)
     });
-    self.menu = ['Restaurants', 'Places of Interest', 'Hotels', 'Tokyo'];
+    self.menu = ko.observableArray([
+      {name: 'Restaurants', url: '#' },
+      {name: 'Places of Interest', url: '#'},
+      {name: 'Hotels', url: '#'},
+      {name: 'Tokyo', url: '#'}
+    ]);
     self.chosenMenuId = ko.observable();
 
-    self.goToMenu = function(menu) { self.chosenMenuId(menu); };
+    self.goToMenu = function(menu) { self.chosenMenuId(menu); console.log(menu); };
 
 }
 
