@@ -1,5 +1,5 @@
 var map;
-var tokyo = { lat: 35.6833, lng: 139.6833};
+var tokyo = { lat: 35.707, lng: 139.733};
 
 $(document).ready(function () {
   ko.applyBindings(viewModel);
@@ -19,9 +19,8 @@ function MyViewModel() {
     self.menu = ['Restaurants', 'Places of Interest', 'Hotels', 'Tokyo'];
     self.chosenMenuId = ko.observable();
 
-    self.goToFolder = function(folder) {
-    self.chosenFolderId(folder);
-  };
+    self.goToMenu = function(menu) { self.chosenMenuId(menu); };
+
 }
 
 ko.bindingHandlers.map = {
