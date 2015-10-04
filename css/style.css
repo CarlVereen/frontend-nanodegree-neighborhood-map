@@ -1,4 +1,26 @@
+body { padding-top: 40px; }
+
 #map {
   padding: 1em;
   margin: 0;
+}
+
+
+#map1Div {
+  width: 600px;
+  height: 575px;
+  border: solid red 2px;
+}
+
+div .container{
+  border: dashed black 1px;
+}
+
+div .row {
+  border: solid blue 2px;
+}
+
+#sideList {
+  border: solid green 2px;
+
 }
