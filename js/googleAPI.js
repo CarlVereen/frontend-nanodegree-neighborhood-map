@@ -22,7 +22,7 @@ function MyViewModel() {
     ]);
     self.chosenMenuId = ko.observable();
     self.chosenMenuData = ko.observable();
-    self.displayData = ko.observable(false);
+    self.displayData = ko.observable(true);
 
     // Actions on data
     self.goToMenu = function(menu) {
