@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 html {
   height: 100%;
 }
@@ -7,7 +8,19 @@ body {
   height: 100%;
   border: solid green 2px;
   /*width: 100%;*/
+||||||| 4bdfe7f... setup menu links and page changes
+body { padding-top: 40px; }
+
+#map {
+  padding: 1em;
+  margin: 0;
+=======
+#map {
+  padding: 1em;
+  margin: 0;
+>>>>>>> parent of 4bdfe7f... setup menu links and page changes
 }
+<<<<<<< HEAD
 
 
 #map1Div {
@@ -28,3 +41,26 @@ div .row {
   border: solid green 2px;
 
 }
+||||||| 4bdfe7f... setup menu links and page changes
+
+
+#map1Div {
+  width: 600px;
+  height: 575px;
+  border: solid red 2px;
+}
+
+div .container{
+  border: dashed black 1px;
+}
+
+div .row {
+  border: solid blue 2px;
+}
+
+#sideList {
+  border: solid green 2px;
+
+}
+=======
+>>>>>>> parent of 4bdfe7f... setup menu links and page changes

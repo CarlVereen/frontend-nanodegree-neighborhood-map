@@ -1,6 +1,5 @@
+var map;
 var tokyo = { lat: 35.707, lng: 139.733};
-var ywsid = 'g4G8OopnF2BWj4yglgeHKw';  //yelp info
-var viewModel = new MyViewModel();
 
 $(document).ready(function () {
   ko.applyBindings(viewModel);
@@ -13,7 +12,10 @@ function MyViewModel() {
         lng:ko.observable(tokyo.lng)
     });
 
-   // Menu and map setup
+    self.mapTwo = ko.observable({
+        lat: ko.observable(40.76),
+        lng:ko.observable(-73.98)
+    });
     self.menu = ko.observableArray([
       {name: 'Restaurants', url: '#' },
       {name: 'Places of Interest', url: '#'},
@@ -33,13 +35,23 @@ function MyViewModel() {
 
     //Restaurants data
     self.restaurantList = function() {
+    self.chosenMenuData = ko.observable();
+    self.displayData = ko.observable(false);
 
-
+    // Actions on data
+    self.goToMenu = function(menu) {
+      self.chosenMenuId(menu);
+      self.displayData(true);
+      console.log(menu);
     };
 
+    //Restaurants data
+    self.restaurantList = function() {
+
+
+    self.goToMenu = function(menu) { self.chosenMenuId(menu); console.log(menu); };
+
 }
-
-
 
 ko.bindingHandlers.map = {
             init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
@@ -54,9 +66,6 @@ ko.bindingHandlers.map = {
 
                 mapObj.googleMap = new google.maps.Map(element, mapOptions);
 
-
-
-                //Mapping Markers
                 mapObj.marker = new google.maps.Marker({
                     map: mapObj.googleMap,
                     position: latLng,
@@ -85,3 +94,6 @@ ko.bindingHandlers.map = {
                 $("#" + element.getAttribute("id")).data("mapObj",mapObj);
             }
         };
+
+
+var viewModel = new MyViewModel();

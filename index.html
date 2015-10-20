@@ -10,9 +10,9 @@
 
   </head>
   <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
@@ -31,6 +31,8 @@
                            click: $root.goToMenu, messageMe"></a>
                 </li>
             </ul>
+            <!-- <li class="active"><a href="#">Restaurants</a></li>
+            <li><a href="#">Places of Interest</a></li> -->
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Search">
@@ -38,16 +40,29 @@
             <button type="submit" class="btn btn-default">Submit</button>
           </form>
         </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid for navbar -->
+      </div><!-- /.container-fluid -->
     </nav>
-
-    <!--Map and lists -->
     <div class="container" id="map">
       <div class="row">
+
         <div id="map1Div" data-bind="map:mapOne">
         <div id="sideList" data-bind="visible: displayData"> <p>Hello</p> </div> <!-- / data display element -->
       </div> <!--/ row 1 -->
     </div><!-- /.container  for map and lists -->
+
+        <table class="table">
+          <tr>
+            <td  id="map1Div" data-bind="map:mapOne"></td>
+            <td  id="sideList" data-bind="visible: displayData"> <p>Hello</p> </td> <!-- / data display element -->
+          </tr>
+        </table>
+      </div> <!--/ row 1 -->
+    </div><!-- /.container  for map and lists -->
+
+        <div class="col-md-1" id="map1Div" data-bind="style:{width:'800px',height:'600px'},map:mapOne"></div>
+      </div>
+    </div>
+
 
     <!-- <div id="map"></div> -->
     <script type="text/javascript"
