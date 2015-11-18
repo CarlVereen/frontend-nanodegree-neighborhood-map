@@ -31,8 +31,6 @@
                            click: $root.goToMenu, messageMe"></a>
                 </li>
             </ul>
-            <!-- <li class="active"><a href="#">Restaurants</a></li>
-            <li><a href="#">Places of Interest</a></li> -->
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Search">
@@ -42,29 +40,15 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-    <div class="container" id="map">
+    <div class="container-fluid">
       <div class="row">
-
-        <div id="map1Div" data-bind="map:mapOne">
-        <div id="sideList" data-bind="visible: displayData"> <p>Hello</p> </div> <!-- / data display element -->
+            <div  class="col-xs-6" id="sideList" data-bind="">  </div>
+            <div  class="col-xs-6" id="map1Div" data-bind="map:mapOne"></div>
+             <!-- / data display element -->
       </div> <!--/ row 1 -->
     </div><!-- /.container  for map and lists -->
 
-        <table class="table">
-          <tr>
-            <td  id="map1Div" data-bind="map:mapOne"></td>
-            <td  id="sideList" data-bind="visible: displayData"> <p>Hello</p> </td> <!-- / data display element -->
-          </tr>
-        </table>
-      </div> <!--/ row 1 -->
-    </div><!-- /.container  for map and lists -->
 
-        <div class="col-md-1" id="map1Div" data-bind="style:{width:'800px',height:'600px'},map:mapOne"></div>
-      </div>
-    </div>
-
-
-    <!-- <div id="map"></div> -->
     <script type="text/javascript"
     	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD61th9_qlpEsR7QjNn4UrpnswZgEReK3E">
     </script>
@@ -72,51 +56,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
     <script src="js/googleapi.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <!-- // <script type='text/javascript' src='js/knockout-3.3.0.js'></script> -->
-
 
       </body>
     </html>
-
-
-
-<!--
-//add fun places to visit and other markers of interest
-function addMarker(location){
-
-  //add fancy location markers
-  var iconBase = '/img/';
-  var icons = {
-    parking: {
-      icon: iconBase + 'automotive.png'
-    },
-    library: {
-      icon: iconBase + 'libraries.png'
-    },
-    museums: {
-      icon: iconBase + 'museums.png'
-    },
-    restaurants: {
-      icon: iconBase + 'restaurants.png'
-    },
-    shows: {
-      icon: iconBase + 'tickets.png'
-    }
-  };
-
-
-    var marker = new google.maps.Marker({
-      position: location.position,
-      icon: icons[location.type].icon,
-      map: map
-    });
-    marker.push(markerLocations);
-  }
-
-  // Sets the map on all markers in the array.
-  function setAllMap(map) {
-    for (var i = 0; i < markerLocations.length; i++) {
-      markerLocations[i].setMap(map);
-    }
-  } -->
