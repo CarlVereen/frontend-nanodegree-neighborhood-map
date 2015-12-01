@@ -33,7 +33,7 @@
             </ul>
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
+              <input type="search" name="Travel search" class="form-control" placeholder="Search" data-bind="value: query, valueUpdate: 'keyup'">
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
           </form>
@@ -42,7 +42,9 @@
     </nav>
     <div class="container-fluid">
       <div class="row">
-            <div  class="col-xs-6" id="sideList" data-bind="">  </div>
+            <div  class="col-xs-6" id="sideList" data-bind="">
+              <ul class='list-group' id="list-results" data-bind=""></ul>
+             </div>
             <div  class="col-xs-6" id="map1Div" data-bind="map:mapOne"></div>
              <!-- / data display element -->
       </div> <!--/ row 1 -->
@@ -52,7 +54,8 @@
     <script type="text/javascript"
     	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD61th9_qlpEsR7QjNn4UrpnswZgEReK3E">
     </script>
-
+    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
     <script src="js/googleapi.js"></script>
