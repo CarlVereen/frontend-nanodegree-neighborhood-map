@@ -1,6 +1,7 @@
 var tokyo = { lat: 35.707, lng: 139.733};
 var ywsid = 'g4G8OopnF2BWj4yglgeHKw';  //yelp info
 var viewModel = new MyViewModel();
+var $listElem = $('#list-results');
 
 $(document).ready(function () {
   ko.applyBindings(viewModel);
@@ -15,8 +16,9 @@ function MyViewModel() {
 
    // Menu and map setup
     self.menu = ko.observableArray([
+      {name: 'My Destinations', url: '#'},
       {name: 'Restaurant', url: '#' },
-      {name: 'Places of Interest', url: '#'},
+      {name: 'Landmarks & Historical Buildings', url: '#'},
       {name: 'Hotels', url: '#'},
       {name: 'Tokyo', url: '#'}
     ]);
@@ -36,7 +38,9 @@ function MyViewModel() {
     //Restaurants data
     self.getRequest = function( searchTopic ) {
       console.log(searchTopic);
-      var catSelect= 'Restaurants';
+      //clear previous results if any
+      $listElem.text("");
+      var catSelect= searchTopic;
       var auth = {
 				//
 				// Update with your auth tokens.
@@ -87,34 +91,18 @@ function MyViewModel() {
 					console.log(data.businesses);
           var resultData = data.businesses;
           for (var i =0; i < resultData.length; i++) {
-            var yelpBusinessName=resultData[i].name;
+            var yelpBusinessName = resultData[i].name;
+            var yelpBusinessURL = resultData[i].url;
+            var yelpBusinessRating = resultData[i].rating;
+            var yelpBusinessImage = resultData[i].image_url;
             console.log(yelpBusinessName);
-            $('#list-results').append('<li class="results">' + yelpBusinessName + '</li>');
+            $('#list-results').append(
+              '<button type="button" class="list-group-item"><span class="badge"> Rating ' + yelpBusinessRating + '</span><img src="' + yelpBusinessImage +'" alt="Image of' + yelpBusinessName + '"><a href="'+ yelpBusinessURL + '"name="'+ yelpBusinessName + '">' + yelpBusinessName + '</a></button>');
           }
-					// var output = prettyPrint(data);
-					// $("body").append(output);
 				}
 			});
 
-
-
-
-        // var requestYelp = "https://api.yelp.com/v2/search?term=food&location=Tokyo";
-        // $.ajax({
-        //   url: requestYelp,
-        //   dataType: "jsonp",
-        //   success: function(data, textStatus, jqXHR) {
-            // $wikiHeaderElem.text('Wikipedia Articles About ' + cityStr);
-            // var wikiTitle = data[1];
-            // var wikiLinks = data[3];
-            // for (var i = 0; i < data.length; i++){
-            //     $wikiElem.append('<ul id="wikipedia-links"> <a href="' + wikiLinks[i] + '">' + wikiTitle[i] + '</a></ul>');
-            // }
-          //   console.log("success");
-          //   console.log(data);
-          // },
-        // });
-       };
+    };
 
 }
 

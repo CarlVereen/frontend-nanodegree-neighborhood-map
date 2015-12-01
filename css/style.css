@@ -3,5 +3,12 @@
 }
 
 #sideList {
+  padding-top: 5em;
+  padding-left: 1em;
   height: 100%;
+  /*border: solid black 2px;*/
+}
+
+img {
+  padding: 0.5em;
 }
