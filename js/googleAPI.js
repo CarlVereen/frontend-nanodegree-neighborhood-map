@@ -1,26 +1,44 @@
-var tokyo = { lat: 35.707, lng: 139.733};
+var tokyo = {called: "tokyo", loc: { lat: 35.707, lng: 139.733}};
+var taito = {called: "taito", loc: {lat: 35.703, lng: 139.737}};
 var ywsid = 'g4G8OopnF2BWj4yglgeHKw';  //yelp info
 var viewModel = new MyViewModel();
 var $listElem = $('#list-results');
+var resultData = [];
+var mapMarkers = [];
+
+
 
 $(document).ready(function () {
   ko.applyBindings(viewModel);
 });
 
+
 function MyViewModel() {
     var self = this;
-    self.mapOne = ko.observable({
-        lat: ko.observable(tokyo.lat),
-        lng:ko.observable(tokyo.lng)
-    });
+    self.mapOne = {
+      center: ko.observableArray([{
+        lat:tokyo.loc.lat,
+        lng:tokyo.loc.lng
+      }]),
+      locations: ko.observableArray(),
+      clearM: ko.observable(),
+      visible: ko.observable('true')
+    };
+    // console.log(self.mapOne.center()[0].lat);
 
+    self.locations = ko.observableArray();
+
+    self.mapOne.locations.push(tokyo);
+    self.mapOne.locations.push(taito);
+    // console.log(self.mapOne.locations());
    // Menu and map setup
     self.menu = ko.observableArray([
       {name: 'My Destinations', url: '#'},
       {name: 'Restaurant', url: '#' },
       {name: 'Landmarks & Historical Buildings', url: '#'},
       {name: 'Hotels', url: '#'},
-      {name: 'Tokyo', url: '#'}
+      {name: 'Tokyo', url: '#'},
+      {name: 'clear', url: '#'}
     ]);
     self.chosenMenuId = ko.observable();
     self.chosenMenuData = ko.observable();
@@ -30,15 +48,37 @@ function MyViewModel() {
     // Actions on data
     self.goToMenu = function(menu) {
       self.chosenMenuId(menu);
-      self.displayData(true);
+      self.displayData(false);
       console.log(menu.name);
-      self.getRequest(menu.name);
+      console.log(self.mapOne.clearM());
+      //console.log(menu.name);
+      if(menu.name !== self.mapOne.clearM()) {
+        self.getRequest(menu.name);
+        self.clearMap(self.mapOne.clearM());
+        self.mapOne.clearM(menu.name);
+      }else {
+        //self.clearMap(menu.name);
+      }
     };
 
-    //Restaurants data
+    self.clearMap = function( topic ) {
+      if( topic !== ) {
+        self.mapOne.visible ('false');
+        console.log('changed to false');
+        console.log(self.mapOne.visible());
+      }else{
+        self.mapOne.visible ('true');
+        console.log('changed to true');
+        console.log(self.mapOne.visible());
+      }
+      // console.log(self.mapOne.visible());
+    };
+
+    //Yelp data
     self.getRequest = function( searchTopic ) {
-      console.log(searchTopic);
+      //console.log(searchTopic);
       //clear previous results if any
+      //self.mapOne.locations.removeAll();
       $listElem.text("");
       var catSelect= searchTopic;
       var auth = {
@@ -88,17 +128,23 @@ function MyViewModel() {
 				'dataType' : 'jsonp',
 				'jsonpCallback' : 'cb',
 				'success' : function(data, textStats, XMLHttpRequest) {
-					console.log(data.businesses);
-          var resultData = data.businesses;
-          for (var i =0; i < resultData.length; i++) {
-            var yelpBusinessName = resultData[i].name;
-            var yelpBusinessURL = resultData[i].url;
-            var yelpBusinessRating = resultData[i].rating;
-            var yelpBusinessImage = resultData[i].image_url;
-            console.log(yelpBusinessName);
+					var yresultData = data.businesses;
+          for (var i =0; i < yresultData.length; i++) {
+            var yelpName = yresultData[i].name;
+            var yelpURL = yresultData[i].url;
+            var yelpRating = yresultData[i].rating;
+            var yelpImage = yresultData[i].image_url;
+            var yelpLocationLat = yresultData[i].location.coordinate.latitude;
+            var yelpLocationLng = yresultData[i].location.coordinate.longitude;
+            var yelpLocation = yelpLocationLat + ', ' + yelpLocationLng;
+            resultData.push({"Name" : yelpName, "loc" : {"lat" : yelpLocationLat, "lng" : yelpLocationLng}});
             $('#list-results').append(
-              '<button type="button" class="list-group-item"><span class="badge"> Rating ' + yelpBusinessRating + '</span><img src="' + yelpBusinessImage +'" alt="Image of' + yelpBusinessName + '"><a href="'+ yelpBusinessURL + '"name="'+ yelpBusinessName + '">' + yelpBusinessName + '</a></button>');
+              '<button type="button" class="list-group-item"><span class="badge"> Rating ' + yelpRating + '</span><img src="' + yelpImage +'" alt="Image of' + yelpName + '"><a href="'+ yelpURL + '"name="'+ yelpName + '">' + yelpName + '</a></button>');
+            self.mapOne.locations.push({called: yelpName, loc: {lat : yelpLocationLat, lng : yelpLocationLng}, topic: searchTopic});
+
           }
+
+
 				}
 			});
 
@@ -112,10 +158,11 @@ ko.bindingHandlers.map = {
             init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
                 var mapObj = ko.utils.unwrapObservable(valueAccessor());
                 var latLng = new google.maps.LatLng(
-                    ko.utils.unwrapObservable(mapObj.lat),
-                    ko.utils.unwrapObservable(mapObj.lng));
+                    ko.utils.unwrapObservable(mapObj.center()[0].lat),
+                    ko.utils.unwrapObservable(mapObj.center()[0].lng));
+
                 var mapOptions = { center: latLng,
-                                  zoom: 13,
+                                  zoom: 11,
                                   disableDefaultUI: false,
                                   mapTypeId: google.maps.MapTypeId.TERRAIN};
 
@@ -123,46 +170,77 @@ ko.bindingHandlers.map = {
 
 
 
-                //Mapping Markers
-                mapObj.marker = new google.maps.Marker({
-                    map: mapObj.googleMap,
-                    position: latLng,
-                    animation: google.maps.Animation.DROP,
-                    title: "You Are Here",
-                    draggable: true
-                });
-
-                var mapMarker = mapObj.marker;
-                mapMarker.addListener('click', toggleBounce);
-
-                function toggleBounce() {
-                  if (mapMarker.getAnimation() !== null) {
-                    mapMarker.setAnimation(null);
-                  } else {
-                    mapMarker.setAnimation(google.maps.Animation.BOUNCE);
-                  }
-                }
-
-                mapObj.onChangedCoord = function(newValue) {
-                    var latLng = new google.maps.LatLng(
-                        ko.utils.unwrapObservable(mapObj.lat),
-                        ko.utils.unwrapObservable(mapObj.lng));
-                    mapObj.googleMap.setCenter(latLng);
-
-                };
-
-                mapObj.onMarkerMoved = function(dragEnd) {
-                    var latLng = mapObj.marker.getPosition();
-                    mapObj.lat(latLng.lat());
-                    mapObj.lng(latLng.lng());
-
-                };
-
-                mapObj.lat.subscribe(mapObj.onChangedCoord);
-                mapObj.lng.subscribe(mapObj.onChangedCoord);
-
-                google.maps.event.addListener(mapObj.marker, 'dragend', mapObj.onMarkerMoved);
-
                 $("#" + element.getAttribute("id")).data("mapObj",mapObj);
+            },
+          update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+
+          var mapObj = ko.utils.unwrapObservable(valueAccessor());
+
+          var Pin = function(map, name, lat, lng, text, topic) {
+            var marker;
+
+            this.name = ko.observable(name);
+            this.lat = ko.observable(lat);
+            this.lng = ko.observable(lng);
+            this.text = ko.observable(text);
+            this.topic = ko.observable(topic);
+            this.title = name;
+
+            marker = new google.maps.Marker({
+              position: new google.maps.LatLng(lat, lng),
+              animation: google.maps.Animation.DROP
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+                 alert("I am a Marker " + name);
+               });
+
+            this.isVisible = ko.observable(false);
+
+
+            this.isVisible.subscribe(function(currentState) {
+              if (currentState) {
+                marker.setMap(map);
+              }else{
+                marker.setMap(null);
+              }
+
+            });
+            this.isVisible(true);
+            console.log(this.isVisible());
+          };
+
+          var pin = mapObj.locations();
+          var pinCreated = [];
+
+
+          for (var m=0; m<pin.length; m++) {
+            if(pin[m].hasOwnProperty('isVisible'))  {
+
+            }else {
+            var mapA = mapObj.googleMap;
+            var name = pin[m].called;
+
+            var lat = pin[m].loc.lat;
+            var lng = pin[m].loc.lng;
+            var text = "pin_" + m;
+            var topic = pin[m].topic;
+            pinCreated.push(name);
+
+            pin[m] = new Pin (mapA, name, lat, lng, text, topic);
+
+          }
+        }
+
+          if(mapObj.visible() === "true"){
+            for (var v=0; v<pin.length; v++) {
+              pin[v].isVisible(true);
             }
+          }else{
+            for (var p=0; p<pin.length; p++) {
+                pin[p].isVisible(false);
+            }
+          }
+
+          }
         };
