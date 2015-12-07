@@ -1,5 +1,6 @@
-var tokyo = {called: "tokyo", loc: { lat: 35.707, lng: 139.733}};
-var taito = {called: "taito", loc: {lat: 35.703, lng: 139.737}};
+var tokyo = {called: "tokyo", loc: { lat: 35.707, lng: 139.733}, topic: "My Destinations"};
+var tokyoTrip = [ {called: "tokyo", loc: { lat: 35.707, lng: 139.733}, topic: "My Destinations"}, {called: "Park Hyatt Tokyo", loc: {lat: 35.6913457, lng: 139.69369000000006}, topic: "My Destinations"}, {called: "Omotesando Koffee", loc: {lat: 35.646137, lng: 139.715392}, topic: "My Destinations"}, {called: "Tokyo National Museum", loc: {lat: 35.7156148, lng: 139.77415380000002}, topic: "My Destinations"}, {called: "Sushi Dai", loc: {lat: 35.6674774 , lng: 139.77862719999996}, topic: "My Destinations"}, {called: "Yushukan", loc: {lat: 35.6917911, lng: 139.7505142}, topic: "My Destinations"}, {called: "Ichiran", loc: {lat: 35.6665006, lng: 139.6975192}, topic: "My Destinations"}, {called: "Tokyo Tower", loc: {lat: 35.6571637, lng: 139.74859790000005}, topic: "My Destinations"}];
+console.log(tokyoTrip);
 var ywsid = 'g4G8OopnF2BWj4yglgeHKw';  //yelp info
 var viewModel = new MyViewModel();
 var $listElem = $('#list-results');
@@ -22,23 +23,28 @@ function MyViewModel() {
       }]),
       locations: ko.observableArray(),
       clearM: ko.observable(),
-      visible: ko.observable('true')
+      visible: ko.observableArray([{
+        restaurant: 'true',
+        landmarks: 'true',
+        hotels: 'true',
+        tokyo: 'true',
+        myDestinations: 'true'
+
+      }])
     };
     // console.log(self.mapOne.center()[0].lat);
 
     self.locations = ko.observableArray();
 
-    self.mapOne.locations.push(tokyo);
-    self.mapOne.locations.push(taito);
-    // console.log(self.mapOne.locations());
+
    // Menu and map setup
     self.menu = ko.observableArray([
-      {name: 'My Destinations', url: '#'},
-      {name: 'Restaurant', url: '#' },
-      {name: 'Landmarks & Historical Buildings', url: '#'},
-      {name: 'Hotels', url: '#'},
-      {name: 'Tokyo', url: '#'},
-      {name: 'clear', url: '#'}
+      {name: 'My Destinations', varName: 'myDestinations', url: '#'},
+      {name: 'Restaurant', varName: 'restaurant', url: '#' },
+      {name: 'Landmarks & Historical Buildings', varName: 'landmarks', url: '#'},
+      {name: 'Hotels', varName: 'hotels', url: '#'},
+      {name: 'Tokyo', varName: 'tokyo', url: '#'},
+      {name: 'clear', varName: 'clear', url: '#'}
     ]);
     self.chosenMenuId = ko.observable();
     self.chosenMenuData = ko.observable();
@@ -47,32 +53,30 @@ function MyViewModel() {
 
     // Actions on data
     self.goToMenu = function(menu) {
-      self.chosenMenuId(menu);
-      self.displayData(false);
-      console.log(menu.name);
-      console.log(self.mapOne.clearM());
-      //console.log(menu.name);
-      if(menu.name !== self.mapOne.clearM()) {
-        self.getRequest(menu.name);
-        self.clearMap(self.mapOne.clearM());
-        self.mapOne.clearM(menu.name);
+      if (menu.name === "My Destinations") {
+        $.each (tokyoTrip, function(key, value) {
+          self.mapOne.locations.push(value);
+        });
       }else {
-        //self.clearMap(menu.name);
+        self.getRequest(menu.name);
       }
+      self.chosenMenuId(menu);
+      self.mapOne.clearM(menu.name);
+      self.clearMap(menu.varName);
     };
 
-    self.clearMap = function( topic ) {
-      if( topic !== ) {
-        self.mapOne.visible ('false');
-        console.log('changed to false');
+    self.clearMap = function( cTopic ) {
+        self.mapOne.visible()[0].restaurant= 'false';
+        self.mapOne.visible()[0].landmarks= 'false';
+        self.mapOne.visible()[0].hotels= 'false';
+        self.mapOne.visible()[0].tokyo= 'false';
+        self.mapOne.visible()[0].myDestinations= 'false';
+        self.mapOne.visible()[0][cTopic] = 'true';
+        console.log('chane current topic ' + cTopic + ' to true');
         console.log(self.mapOne.visible());
-      }else{
-        self.mapOne.visible ('true');
-        console.log('changed to true');
-        console.log(self.mapOne.visible());
-      }
-      // console.log(self.mapOne.visible());
-    };
+      };
+
+
 
     //Yelp data
     self.getRequest = function( searchTopic ) {
@@ -137,6 +141,8 @@ function MyViewModel() {
             var yelpLocationLat = yresultData[i].location.coordinate.latitude;
             var yelpLocationLng = yresultData[i].location.coordinate.longitude;
             var yelpLocation = yelpLocationLat + ', ' + yelpLocationLng;
+            var yelpID = yresultData[i].id;
+            console.log(yelpID);
             resultData.push({"Name" : yelpName, "loc" : {"lat" : yelpLocationLat, "lng" : yelpLocationLng}});
             $('#list-results').append(
               '<button type="button" class="list-group-item"><span class="badge"> Rating ' + yelpRating + '</span><img src="' + yelpImage +'" alt="Image of' + yelpName + '"><a href="'+ yelpURL + '"name="'+ yelpName + '">' + yelpName + '</a></button>');
@@ -149,8 +155,8 @@ function MyViewModel() {
 			});
 
     };
-
 }
+
 
 
 
@@ -231,16 +237,27 @@ ko.bindingHandlers.map = {
 
           }
         }
-
-          if(mapObj.visible() === "true"){
+        console.log(mapObj.visible()[0]);
+        // for (p=0; p<Object.keys(mapObj.visible()[0]).length; p++) {
+        //for (var pin in mapObj.visible()[0]) {
+        $.each(mapObj.visible()[0], function(key, value) {
+          if(value === 'true') {
             for (var v=0; v<pin.length; v++) {
-              pin[v].isVisible(true);
-            }
-          }else{
-            for (var p=0; p<pin.length; p++) {
-                pin[p].isVisible(false);
+              if (pin[v].topic() === mapObj.clearM() ) {
+                console.log(pin[v].topic());
+                pin[v].isVisible(true);
+              }else{
+                for (var p=0; p<pin.length; p++) {
+                  if(pin[p].topic() !== mapObj.clearM){
+                    pin[p].isVisible(false);
+                    console.log(pin[p].isVisible());
+                  }
+                }
+              }
             }
           }
+        });
+
 
           }
         };
