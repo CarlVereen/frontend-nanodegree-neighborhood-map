@@ -1,4 +1,3 @@
-var tokyo = {title: "tokyo", loc: { lat: 35.707, lng: 139.733}, topic: "My Destinations"};
 var tokyoTrip = [
   {title: "Tokyo", loc: { lat: 35.707, lng: 139.733}, topic: "My Destinations", rating: 5, image: "http://uppsalainternationalweek.com/wp-content/uploads/2015/04/tokyo.jpg", webPage: "www.metro.tokyo.jp/ENGLISH/", snippet:"Tokyo, Japan’s bustling capital, mixes the ultramodern and the traditional, from neon-lit skyscrapers and anime shops to cherry trees and temples." },
   {title: "Park Hyatt Tokyo", loc: {lat: 35.6913457, lng: 139.69369000000006}, topic: "My Destinations", rating: 4.5, image: "http://tokyo.park.hyatt.com/content/dam/PropertyWebsites/park/tyoph/Media/All/Park-Hyatt-Tokyo-Park-View-Room.jpg", webPage: "http://tokyo.park.hyatt.com/en/hotel/home.html", snippet: "Uncover a wonderful experience during your stay at Park Hyatt Tokyo. Our spacious and comfortable rooms offer stunning views of Tokyo." },
@@ -9,12 +8,8 @@ var tokyoTrip = [
   {title: "Ichiran", loc: {lat: 35.6665006, lng: 139.6975192}, topic: "My Destinations", rating: 5, image: "https://mcoverland.files.wordpress.com/2013/10/ichiran.jpg", webPage: "http://www.ichiran.co.jp/index_hp.html", snippet: "You place your order at a vending machine, fill out a form (preferences), and then sit at an individual counter to slurp down your noodles." },
   {title: "Tokyo Tower", loc: {lat: 35.6571637, lng: 139.74859790000005}, topic: "My Destinations", rating: 4, image: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Tokyo_tower_world_trade.jpg", webPage: "www.tokyotower.co.jp/eng/", snippet: "Tokyo Tower is a communications and observation tower located in the Shiba-koen district of Minato, Tokyo, Japan. At 332.9 metres, it is the second-tallest structure in Japan." }
 ];
-
-var ywsid = 'g4G8OopnF2BWj4yglgeHKw';  //yelp info
 var viewModel = new MyViewModel();
 var $listElem = $('#list-results');
-var resultData = [];
-var mapMarkers = [];
 
 
 
@@ -27,8 +22,8 @@ function MyViewModel() {
     var self = this;
     self.mapOne = {
       center: ko.observableArray([{
-        lat:tokyo.loc.lat,
-        lng:tokyo.loc.lng
+        lat:tokyoTrip[0].loc.lat,
+        lng:tokyoTrip[0].loc.lng
       }]),
       locations: ko.observableArray(),
       clearM: ko.observable(),
@@ -41,15 +36,7 @@ function MyViewModel() {
       }]),
     };
 
-    $.each (tokyoTrip, function(key, value) {
-      self.mapOne.locations.push(value);
-      $('#list-results').append(
-        '<button type="button" class="list-group-item"><span class="badge"> Rating ' + value.rating + '</span><img src="' + value.image +'" alt="Image of ' + value.title + '" height="100" width="100"><a href="'+ value.webPage + '"name="'+ value.title + '">' + value.title + '</a></button>');
-        self.mapOne.clearM('My Destinations');
-      });
-
-    // self.locations = ko.observableArray();
-    self.query = ko.observable('Tokyo');
+    self.sideMenu = ko.observableArray([]);
 
 
    // Menu and map setup
@@ -63,25 +50,39 @@ function MyViewModel() {
     ]);
     self.chosenMenuId = ko.observable();
     self.chosenMenuData = ko.observable();
-    self.displayData = ko.observable(false);
+    self.displayResult = ko.observable(true);
     self.query = ko.observable('');
 
-    // Actions on data
-    self.goToMenu = function(menu) {
-      if (menu.name === "My Destinations") {
-        $.each (tokyoTrip, function(key, value) {
-          self.mapOne.locations.push(value);
-          console.log(value.rating);
-          $('#list-results').append(
-            '<button type="button" class="list-group-item"><span class="badge"> Rating ' + value.rating + '</span><img src="' + value.image +'" alt="Image of ' + value.title + '" height="100" width="100"><a href="'+ value.webPage + '"name="'+ value.title + '">' + value.title + '</a></button>');
+
+    self.searchArray = ko.computed(function() {
+        var search = self.query().toLowerCase();
+        if (!search) {
+          return;
+        }
+        return ko.utils.arrayFilter(self.mapOne.locations(), function (pin) {
+            var doesMatch = pin.title.toLowerCase().indexOf(search) >= 0;
+
+            if(pin.isVisible) {
+              pin.isVisible(doesMatch);
+              return doesMatch;
+            }else {
+              return;
+            }
+
         });
-      }else {
-        self.getRequest(menu.name);
-      }
-      self.chosenMenuId(menu);
-      self.mapOne.clearM(menu.name);
-      self.clearMap(menu.varName);
-    };
+    });
+
+
+
+    self.postSideMenu = ko.computed(function() {
+      ko.utils.arrayForEach(self.sideMenu(), function(post) {
+        var button= '<button type="button" class="list-group-item" data-bind="visible: displayResult"><span class="badge"> Rating ' + post.rating + '</span>';
+        var image = '<img src="' + post.image +'" alt="Image of ' + post.title + '" height="100" width="100">';
+        var pageURL = '<a href="'+ post.webPage + '"name="'+ post.title + '">' + post.title + '</a></button>';
+        var finalPost = button + image + pageURL;
+        $('#list-results').append(finalPost);
+      });
+    });
 
     self.clearMap = function( cTopic ) {
         self.mapOne.visible()[0].restaurant= 'false';
@@ -90,23 +91,56 @@ function MyViewModel() {
         self.mapOne.visible()[0].tokyo= 'false';
         self.mapOne.visible()[0].myDestinations= 'false';
         self.mapOne.visible()[0][cTopic] = 'true';
-        // console.log('chane current topic ' + cTopic + ' to true');
-        // console.log(self.mapOne.visible());
+
       };
 
+    // Actions on data
+    self.goToMenu = function(menu) {
+      if (menu.name === "My Destinations") {
+        // $listElem.text("");
+        ko.utils.arrayForEach(tokyoTrip, function(post) {
+          self.sideMenu.push(post);
+          self.mapOne.locations.push(post);
+        });
+        // $.each (tokyoTrip, function(key, value) {
+        //   self.sideMenu.push(
+        //     '<button type="button" class="list-group-item" data-bind="visible: displayResult"><span class="badge"> Rating ' + value.rating + '</span><img src="' + value.image +'" alt="Image of ' + value.title + '" height="100" width="100"><a href="'+ value.webPage + '"name="'+ value.title + '">' + value.title + '</a></button>');
+        //     self.mapOne.locations.push(value);
+        //     console.log(value);
+        // });
 
+      }else {
+        self.getRequest(menu.name);
+      }
+      self.chosenMenuId(menu);
+      self.mapOne.clearM(menu.name);
+      self.clearMap(menu.varName);
+    };
 
+    self.goToMenu(self.menu()[0]);
+
+    self.removeMarkers = ko.computed(function() {
+      var topic = self.mapOne.clearM();
+      return ko.utils.arrayForEach(self.mapOne.locations(), function(pin) {
+        if(pin.isVisible) {
+
+          var doesMatch = pin.topic().indexOf(topic) >= 0;
+            pin.isVisible(doesMatch);
+
+            return doesMatch;
+        }else{
+          return;
+        }
+      });
+    });
 
     //Yelp data
     self.getRequest = function( searchTopic ) {
-      //console.log(searchTopic);
-      //clear previous results if any
-      //self.mapOne.locations.removeAll();
       $listElem.text("");
       var catSelect= searchTopic;
       var auth = {
 				//
-				// Update with your auth tokens.
+				// auth tokens.
 				//
 				consumerKey : "g4G8OopnF2BWj4yglgeHKw",
 				consumerSecret : "M3Wyy0015F46ub0CW-pYwC8JDZc",
@@ -162,11 +196,10 @@ function MyViewModel() {
             var yelpLocation = yelpLocationLat + ', ' + yelpLocationLng;
             var yelpID = yresultData[i].id;
             var yelpSnip = yresultData[i].snippet_text;
-            // console.log(yelpID);
-            resultData.push({"Name" : yelpName, "loc" : {"lat" : yelpLocationLat, "lng" : yelpLocationLng}});
-            $('#list-results').append(
-              '<button type="button" class="list-group-item"><span class="badge"> Rating ' + yelpRating + '</span><img src="' + yelpImage +'" alt="Image of ' + yelpName + '"><a href="'+ yelpURL + '"name="'+ yelpName + '">' + yelpName + '</a></button>');
-            self.mapOne.locations.push({title: yelpName, loc: {lat : yelpLocationLat, lng : yelpLocationLng}, topic: searchTopic, snippet: yelpSnip});
+            var yelpResult = {title: yelpName, loc: { lat: yelpLocationLat, lng: yelpLocationLng}, topic: searchTopic, rating: yelpRating, image: yelpImage, webPage: yelpURL, snippet: yelpSnip };
+            self.sideMenu.push(yelpResult);
+            self.mapOne.locations.push(yelpResult);
+
 
           }
 
@@ -176,8 +209,6 @@ function MyViewModel() {
 
     };
 }
-
-
 
 
 
@@ -202,103 +233,86 @@ ko.bindingHandlers.map = {
             },
           update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 
-          var mapObj = ko.utils.unwrapObservable(valueAccessor());
+                var mapObj = ko.utils.unwrapObservable(valueAccessor());
 
-          var Pin = function(map, name, lat, lng, text, topic, snippet) {
-            var marker;
+                var Pin = function(map, name, lat, lng, text, topic, snippet) {
+                  var marker;
 
-            this.name = ko.observable(name);
-            this.lat = ko.observable(lat);
-            this.lng = ko.observable(lng);
-            this.text = ko.observable(text);
-            this.topic = ko.observable(topic);
-            this.title = name;
-            this.snip = snippet;
+                  this.name = ko.observable(name);
+                  this.lat = ko.observable(lat);
+                  this.lng = ko.observable(lng);
+                  this.text = ko.observable(text);
+                  this.topic = ko.observable(topic);
+                  this.title = name;
+                  this.snip = snippet;
 
-            marker = new google.maps.Marker({
-              position: new google.maps.LatLng(lat, lng),
-              animation: google.maps.Animation.DROP
-            });
+                  marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(lat, lng),
+                    animation: google.maps.Animation.DROP
+                  });
 
-            google.maps.event.addListener(marker, 'mouseover', function() {
-                 infowindow.open(map, marker);
-                 setTimeout(function() { infowindow.close(); }, 5000);
-               });
+                  google.maps.event.addListener(marker, 'mouseover', function() {
+                       infowindow.open(map, marker);
+                       setTimeout(function() { infowindow.close(); }, 5000);
+                     });
 
-            google.maps.event.addListener(marker, 'click', function() {
-                //  alert("I am a Marker " + name);
-                 toggleBounce();
-                 infowindow.open(map, marker);
-               });
-            var contentString = '<h5 class="bName">' + this.title + '</h5>' + '<div><strong>' + 'Snippet:' + '</strong></div>' + '<div>'  + this.snip + '</div>';
+                  google.maps.event.addListener(marker, 'click', function() {
+                      //  alert("I am a Marker " + name);
+                       toggleBounce();
+                       infowindow.open(map, marker);
+                     });
+                  var contentString = '<h5 class="bName">' + this.title + '</h5>' + '<div><strong>' + 'Snippet:' + '</strong></div>' + '<div>'  + this.snip + '</div>';
 
-             var infowindow = new google.maps.InfoWindow({
-               content: contentString,
-               maxWidth: 200
-             });
+                   var infowindow = new google.maps.InfoWindow({
+                     content: contentString,
+                     maxWidth: 200
+                   });
 
-            this.isVisible = ko.observable(false);
+                  this.isVisible = ko.observable(false);
 
-            function toggleBounce() {
-              if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-              } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-              }
-            }
-
-
-            this.isVisible.subscribe(function(currentState) {
-              if (currentState) {
-                marker.setMap(map);
-              }else{
-                marker.setMap(null);
-              }
-
-            });
-            this.isVisible(true);
-            // console.log(this.isVisible());
-          };
-
-          var pin = mapObj.locations();
-          var pinCreated = [];
-
-
-          for (var m=0; m<pin.length; m++) {
-            if(pin[m].hasOwnProperty('isVisible'))  {
-
-            }else {
-            var mapA = mapObj.googleMap;
-            var name = pin[m].title;
-
-            var lat = pin[m].loc.lat;
-            var lng = pin[m].loc.lng;
-            var text = "pin_" + m;
-            var topic = pin[m].topic;
-            var snippet = pin[m].snippet;
-            pinCreated.push(name);
-
-            pin[m] = new Pin (mapA, name, lat, lng, text, topic, snippet);
-
-          }
-        }
-        $.each(mapObj.visible()[0], function(key, value) {
-          if(value === 'true') {
-            for (var v=0; v<pin.length; v++) {
-              if (pin[v].topic() === mapObj.clearM() ) {
-                pin[v].isVisible(true);
-              }else{
-                for (var p=0; p<pin.length; p++) {
-                  if(pin[p].topic() !== mapObj.clearM){
-                    pin[p].isVisible(false);
-                    // console.log(pin[p].isVisible());
+                  function toggleBounce() {
+                    if (marker.getAnimation() !== null) {
+                      marker.setAnimation(null);
+                    } else {
+                      marker.setAnimation(google.maps.Animation.BOUNCE);
+                    }
                   }
+
+
+                  this.isVisible.subscribe(function(currentState) {
+                    if (currentState) {
+                      marker.setMap(map);
+                    }else{
+                      marker.setMap(null);
+                    }
+
+                  });
+                  this.isVisible(true);
+
+                };
+
+                var pin = mapObj.locations();
+                var pinCreated = [];
+
+
+                for (var m=0; m<pin.length; m++) {
+                  if(pin[m].hasOwnProperty('isVisible'))  {
+
+                  }else {
+                  var mapA = mapObj.googleMap;
+                  var name = pin[m].title;
+
+                  var lat = pin[m].loc.lat;
+                  var lng = pin[m].loc.lng;
+                  var text = "pin_" + m;
+                  var topic = pin[m].topic;
+                  var snippet = pin[m].snippet;
+                  pinCreated.push(name);
+
+                  pin[m] = new Pin (mapA, name, lat, lng, text, topic, snippet);
+
                 }
               }
-            }
-          }
-        });
-
 
           }
         };
