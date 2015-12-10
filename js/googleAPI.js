@@ -38,6 +38,21 @@ function MyViewModel() {
 
     self.sideMenu = ko.observableArray([]);
 
+    var Post = function(title, loc, topic, rating, image, webPage, snippet) {
+
+      this.title = ko.observable(title);
+      this.lat = ko.observable(loc.lat);
+      this.lng = ko.observable(loc.lng);
+      this.topic = ko.observable(topic);
+      this.rating = ko.observable(rating);
+      this.image = ko.observable(image);
+      this.webPage = ko.observable(webPage);
+      this.snip = snippet;
+      // this.isVisible = ko.observable(false);
+
+
+    };
+
 
    // Menu and map setup
     self.menu = ko.observableArray([
@@ -53,6 +68,15 @@ function MyViewModel() {
     self.displayResult = ko.observable(true);
     self.query = ko.observable('');
 
+
+
+    self.addNewPost = function(array) {
+      var newPost = ko.utils.arrayMap(array, function(post) {
+        return new Post(post.title, post.loc, post.topic, post.rating, post.image, post.webPage, post.snippet);
+      });
+      self.sideMenu.push.apply(self.sideMenu, newPost);
+      self.mapOne.locations.push.apply(self.mapOne.locations, newPost);
+    };
 
     self.searchArray = ko.computed(function() {
         var search = self.query().toLowerCase();
@@ -76,9 +100,9 @@ function MyViewModel() {
 
     self.postSideMenu = ko.computed(function() {
       ko.utils.arrayForEach(self.sideMenu(), function(post) {
-        var button= '<button type="button" class="list-group-item" data-bind="visible: displayResult"><span class="badge"> Rating ' + post.rating + '</span>';
-        var image = '<img src="' + post.image +'" alt="Image of ' + post.title + '" height="100" width="100">';
-        var pageURL = '<a href="'+ post.webPage + '"name="'+ post.title + '">' + post.title + '</a></button>';
+        var button= '<button type="button" class="list-group-item" data-bind="visible: displayResult"><span class="badge"> Rating ' + post.rating() + '</span>';
+        var image = '<img src="' + post.image() +'" alt="Image of ' + post.title() + '" height="100" width="100">';
+        var pageURL = '<a href="'+ post.webPage() + '"name="'+ post.title() + '">' + post.title() + '</a></button>';
         var finalPost = button + image + pageURL;
         $('#list-results').append(finalPost);
       });
@@ -97,17 +121,16 @@ function MyViewModel() {
     // Actions on data
     self.goToMenu = function(menu) {
       if (menu.name === "My Destinations") {
-        // $listElem.text("");
-        ko.utils.arrayForEach(tokyoTrip, function(post) {
-          self.sideMenu.push(post);
-          self.mapOne.locations.push(post);
-        });
-        // $.each (tokyoTrip, function(key, value) {
-        //   self.sideMenu.push(
-        //     '<button type="button" class="list-group-item" data-bind="visible: displayResult"><span class="badge"> Rating ' + value.rating + '</span><img src="' + value.image +'" alt="Image of ' + value.title + '" height="100" width="100"><a href="'+ value.webPage + '"name="'+ value.title + '">' + value.title + '</a></button>');
-        //     self.mapOne.locations.push(value);
-        //     console.log(value);
+        if ($listElem){
+          ko.cleanNode($listElem);
+        }
+        self.addNewPost(tokyoTrip);
+
+        // ko.utils.arrayForEach(tokyoTrip, function(post) {
+        //   self.sideMenu.push(tokyoTrip);
+        //   self.mapOne.locations.push(post);
         // });
+
 
       }else {
         self.getRequest(menu.name);
@@ -133,7 +156,7 @@ function MyViewModel() {
         }
       });
     });
-
+var yelpPost = [];
     //Yelp data
     self.getRequest = function( searchTopic ) {
       $listElem.text("");
@@ -197,12 +220,11 @@ function MyViewModel() {
             var yelpID = yresultData[i].id;
             var yelpSnip = yresultData[i].snippet_text;
             var yelpResult = {title: yelpName, loc: { lat: yelpLocationLat, lng: yelpLocationLng}, topic: searchTopic, rating: yelpRating, image: yelpImage, webPage: yelpURL, snippet: yelpSnip };
-            self.sideMenu.push(yelpResult);
-            self.mapOne.locations.push(yelpResult);
+            yelpPost.push(yelpResult);
 
 
           }
-
+          self.addNewPost(yelpPost);
 
 				}
 			});
@@ -235,13 +257,12 @@ ko.bindingHandlers.map = {
 
                 var mapObj = ko.utils.unwrapObservable(valueAccessor());
 
-                var Pin = function(map, name, lat, lng, text, topic, snippet) {
+                var Pin = function(map, name, lat, lng, topic, snippet) {
                   var marker;
 
                   this.name = ko.observable(name);
                   this.lat = ko.observable(lat);
                   this.lng = ko.observable(lng);
-                  this.text = ko.observable(text);
                   this.topic = ko.observable(topic);
                   this.title = name;
                   this.snip = snippet;
@@ -294,25 +315,33 @@ ko.bindingHandlers.map = {
                 var pin = mapObj.locations();
                 var pinCreated = [];
 
+                // this.addNewMarker = function(pin) {
+                //   console.log('called add marker');
+                   var mapA = mapObj.googleMap;
+                   var newMarker = ko.utils.arrayMap(pin, function(marker) {
+                     return new Pin(mapA, marker.title(), marker.lat(), marker.lng(), marker.topic(), marker.snip);
+                  });
+                  // self.pin.push.apply(self.pin, newMarker);
+                // };
 
-                for (var m=0; m<pin.length; m++) {
-                  if(pin[m].hasOwnProperty('isVisible'))  {
-
-                  }else {
-                  var mapA = mapObj.googleMap;
-                  var name = pin[m].title;
-
-                  var lat = pin[m].loc.lat;
-                  var lng = pin[m].loc.lng;
-                  var text = "pin_" + m;
-                  var topic = pin[m].topic;
-                  var snippet = pin[m].snippet;
-                  pinCreated.push(name);
-
-                  pin[m] = new Pin (mapA, name, lat, lng, text, topic, snippet);
-
-                }
-              }
+              //   for (var m=0; m<pin.length; m++) {
+              //     if(pin[m].hasOwnProperty('isVisible'))  {
+              //
+              //     }else {
+              //     // var mapA = mapObj.googleMap;
+              //     // var name = pin[m].title;
+              //     //
+              //     // var lat = pin[m].loc.lat;
+              //     // var lng = pin[m].loc.lng;
+              //     // var text = "pin_" + m;
+              //     // var topic = pin[m].topic;
+              //     // var snippet = pin[m].snippet;
+              //     pinCreated.push(name);
+              //
+              //     pin[m] = new Pin (mapA, name, lat, lng, text, topic, snippet);
+              //
+              //   }
+              // }
 
           }
         };
