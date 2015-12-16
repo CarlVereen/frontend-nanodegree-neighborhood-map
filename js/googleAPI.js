@@ -170,11 +170,11 @@ function MyViewModel() {
    // Navigation menu and web page function setup
     self.menu = ko.observableArray([
       {name: 'My Destinations', varName: 'myDestinations', url: '#', dataCol: 'myDest'},
-      {name: 'Restaurant', varName: 'restaurant', url: '#', dataCol: 'tRest' },
-      {name: 'Landmarks & Historical Buildings', varName: 'landmarks', url: '#', dataCol: 'tLandmarks'},
-      {name: 'Hotels', varName: 'hotels', url: '#', dataCol:  'tHotels'},
-      {name: 'Tokyo', varName: 'tokyo', url: '#', dataCol: 'tTokyo'},
-      
+      {name: 'Top 10 Restaurant', varName: 'restaurant', url: '#', dataCol: 'tRest' },
+      {name: 'Top 10 Landmarks & Historical Buildings', varName: 'landmarks', url: '#', dataCol: 'tLandmarks'},
+      {name: 'Top 10 Hotels', varName: 'hotels', url: '#', dataCol:  'tHotels'},
+      {name: 'Tokyo Overall Top 10', varName: 'tokyo', url: '#', dataCol: 'tTokyo'},
+
     ]);
     self.chosenMenuId = ko.observable();
     self.chosenMenuData = ko.observable();
