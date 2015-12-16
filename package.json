@@ -1,0 +1,28 @@
+{
+  "name": "frontend-nanodegree-neighborhood-map",
+  "version": "1.0.0",
+  "description": "A map of Tokyo and the places I wish to visit",
+  "main": "index.js",
+  "dependencies": {
+    "oauth-1.0a": "^0.2.1",
+    "yelp": "^0.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mehkai/frontend-nanodegree-neighborhood-map.git"
+  },
+  "keywords": [
+    "Nano",
+    "Degree"
+  ],
+  "author": "Carl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mehkai/frontend-nanodegree-neighborhood-map/issues"
+  },
+  "homepage": "https://github.com/Mehkai/frontend-nanodegree-neighborhood-map"
+}
