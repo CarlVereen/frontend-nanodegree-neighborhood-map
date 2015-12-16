@@ -174,7 +174,7 @@ function MyViewModel() {
       {name: 'Landmarks & Historical Buildings', varName: 'landmarks', url: '#', dataCol: 'tLandmarks'},
       {name: 'Hotels', varName: 'hotels', url: '#', dataCol:  'tHotels'},
       {name: 'Tokyo', varName: 'tokyo', url: '#', dataCol: 'tTokyo'},
-      {name: 'clear', varName: 'clear', url: '#'}
+      
     ]);
     self.chosenMenuId = ko.observable();
     self.chosenMenuData = ko.observable();
