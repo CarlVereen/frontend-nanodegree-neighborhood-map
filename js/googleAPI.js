@@ -85,12 +85,12 @@ function MyViewModel() {
       this.showPost = ko.observable(true);
 
 
-      this.showlink = function() {
-        self.showPost(true);
-      };
-      this.hidelink = function() {
-        self.showPost(false);
-      };
+      // this.showlink = function() {
+      //   self.showPost(true);
+      // };
+      // this.hidelink = function() {
+      //   self.showPost(false);
+      // };
 
 
 
@@ -311,19 +311,18 @@ function MyViewModel() {
 
     };
 
-    self.searchPins = ko.computed(function() {
+    self.searchPosts = ko.computed(function () {
       var search = self.query().toLowerCase();
-
-      $.each(self.mapOne.locations[0], function(key, value) {
-
-          return ko.utils.arrayFilter(value(), function(pin, key) {
-
-            var doesMatch = pin.name().toLowerCase().indexOf(search) >= 0;
-              pin.isVisible(doesMatch);
+      $.each(self.mapOne.dataCol[0], function(key, value) {
+          return ko.utils.arrayFilter(value(), function(post, key) {
+            console.log(post);
+            var doesMatch = post.postName().toLowerCase().indexOf(search) >= 0;
+              post.showPost(doesMatch);
               return doesMatch;
-          });
+
       });
     });
+  });
 
     self.filteredPosts = ko.computed(function () {
       var filterPost = [];
@@ -332,16 +331,7 @@ function MyViewModel() {
         if (!search) {
           return self.mapOne.dataCol[0][currentTopic]();
         }else {
-          $.each(self.mapOne.dataCol[0][currentTopic](), function(key, value) {
-              console.log(key);
-              console.log(value.showPost());
-              // return ko.utils.arrayFilter(value(), function(pin, key) {
-              //
-                // var doesMatch = pin.name().toLowerCase().indexOf(search) >= 0;
-                  // post.isVisible(doesMatch);
-              //     return doesMatch;
-              // });
-          });
+          return self.mapOne.dataCol[0][currentTopic]();
         }
 
         });
@@ -350,9 +340,7 @@ function MyViewModel() {
           var search = self.query().toLowerCase();
 
           $.each(self.mapOne.locations[0], function(key, value) {
-
               return ko.utils.arrayFilter(value(), function(pin, key) {
-
                 var doesMatch = pin.name().toLowerCase().indexOf(search) >= 0;
                   pin.isVisible(doesMatch);
                   return doesMatch;
