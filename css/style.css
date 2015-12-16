@@ -1,5 +1,6 @@
-#map1Div {
+#map {
   height: 100vh;
+  /*border: solid red 2px;*/
 }
 
 #sideList {
