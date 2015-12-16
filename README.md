@@ -16,7 +16,7 @@ Neighborhood map project 5 is developed for Front-End Nanodegree at Udacity.
     * Use the search input on the right to search through your current list
 
 
-[Demo](http://mehkai.github.io/neighborhood-map) -- coming soon!
+[Demo](http://mehkai.github.io/neighborhood-map)
 
 
 References:
