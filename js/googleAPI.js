@@ -1,33 +1,25 @@
+// Set global trip variable and viewModel for knockout
+
 var tokyoTrip = [
-  {title: "Tokyo", lat: 35.707, lng: 139.733, topic: "myDest", rating: 5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/v7F_VyRGNMyEdn-bSEcuoA/ls.jpg", webPage: "www.metro.tokyo.jp/ENGLISH/", snippet:"Tokyo, Japan’s bustling capital, mixes the ultramodern and the traditional, from neon-lit skyscrapers and anime shops to cherry trees and temples."},
-  {title: "Park Hyatt Tokyo", lat: 35.6913457, lng: 139.69369000000006, topic: "myDest", rating: 4.5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/WJsqb7QYxFK4zQ0K2YBAuQ/ms.jpg", webPage: "http://tokyo.park.hyatt.com/en/hotel/home.html", snippet: "Uncover a wonderful experience during your stay at Park Hyatt Tokyo. Our spacious and comfortable rooms offer stunning views of Tokyo." },
-  {title: "Omotesando Koffee", lat: 35.646137, lng: 139.715392, topic: "myDest", rating: 4.5, image: "http://s3-media1.fl.yelpcdn.com/bphoto/UTYAPWV3v8YI_teBmIz8rA/ms.jpg", webPage: "http://ooo-koffee.com/index.html", snippet: "Tucked into the backstreets of Omotesando, a posh, upscale neighborhood adjacent to the fashion epicenter of Harajuku, lies a tiny house." },
-  {title: "Tokyo National Museum", lat: 35.7156148, lng: 139.77415380000002, topic: "myDest", rating: 4.5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/ijrAk8yLNlO129ou6aH0Jw/ms.jpg", webPage: "www.tnm.jp/?lang=en", snippet: "The Tokyo National Museum, or TNM, established in 1872, is the oldest Japanese national museum, and the largest art museum in Japan." },
-  {title: "Sushi Dai", lat: 35.6674774 , lng: 139.77862719999996, topic: "myDest", rating: 4.5, image: "http://s3-media3.fl.yelpcdn.com/bphoto/p-Kihl-cJ8NbOkOC6no76w/ms.jpg", webPage: "http://www.tsukijigourmet.or.jp/22_sushidai/index.htm#02", snippet:"Fun fact: 2016 they will be moving the fish market across the Sumida River to a larger venue across the Sumida river." },
-  {title: "Yushukan", lat: 35.6917911, lng: 139.7505142, topic: "myDest", rating: 5, image: "http://s3-media3.fl.yelpcdn.com/bphoto/irDaVGuaZPCk1Y-G0hIOPA/ms.jpg", webPage: "http://www.yasukuni.or.jp/english/index.html" , snippet: "The Yūshūkan (遊就館) is a Japanese military and war museum located within Yasukuni Shrine in Chiyoda, Tokyo."},
-  {title: "Ichiran", lat: 35.6665006, lng: 139.6975192, topic: "myDest", rating: 5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/jTcqGatAJT9c4fjbRGpPoQ/o.jpg", webPage: "http://www.ichiran.co.jp/index_hp.html", snippet: "You place your order at a vending machine, fill out a form (preferences), and then sit at an individual counter to slurp down your noodles." },
-  {title: "Tokyo Tower", lat: 35.6571637, lng: 139.74859790000005, topic: "myDest", rating: 4, image: "http://s3-media1.fl.yelpcdn.com/bphoto/PqiUXpCMenrZMou0G6ktHQ/ms.jpg", webPage: "www.tokyotower.co.jp/eng/", snippet: "Tokyo Tower is a communications and observation tower located in the Shiba-koen district of Minato, Tokyo, Japan. At 332.9 metres, it is the second-tallest structure in Japan." }
+  {title: "Tokyo", lat: 35.707, lng: 139.733, topic: "myDest", rating: 5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/v7F_VyRGNMyEdn-bSEcuoA/ls.jpg", webPage: "https://en.wikipedia.org/wiki/Tokyo", snippet:"Tokyo, Japan’s bustling capital, mixes the ultramodern and the traditional, from neon-lit skyscrapers and anime shops to cherry trees and temples.", yid: "1",},
+  {title: "Park Hyatt Tokyo", lat: 35.6913457, lng: 139.69369000000006, topic: "myDest", rating: 4.5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/WJsqb7QYxFK4zQ0K2YBAuQ/ms.jpg", webPage: "http://tokyo.park.hyatt.com/en/hotel/home.html", snippet: "Uncover a wonderful experience during your stay at Park Hyatt Tokyo. Our spacious and comfortable rooms offer stunning views of Tokyo.", yid: "2",},
+  {title: "Omotesando Koffee", lat: 35.646137, lng: 139.715392, topic: "myDest", rating: 4.5, image: "http://s3-media1.fl.yelpcdn.com/bphoto/UTYAPWV3v8YI_teBmIz8rA/ms.jpg", webPage: "http://ooo-koffee.com/index.html", snippet: "Tucked into the backstreets of Omotesando, a posh, upscale neighborhood adjacent to the fashion epicenter of Harajuku, lies a tiny house." , yid: "3",},
+  {title: "Tokyo National Museum", lat: 35.7156148, lng: 139.77415380000002, topic: "myDest", rating: 4.5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/ijrAk8yLNlO129ou6aH0Jw/ms.jpg", webPage: "www.tnm.jp/?lang=en", snippet: "The Tokyo National Museum, or TNM, established in 1872, is the oldest Japanese national museum, and the largest art museum in Japan." , yid: "4",},
+  {title: "Sushi Dai", lat: 35.6674774 , lng: 139.77862719999996, topic: "myDest", rating: 4.5, image: "http://s3-media3.fl.yelpcdn.com/bphoto/p-Kihl-cJ8NbOkOC6no76w/ms.jpg", webPage: "http://www.tsukijigourmet.or.jp/22_sushidai/index.htm#02", snippet:"Fun fact: 2016 they will be moving the fish market across the Sumida River to a larger venue across the Sumida river.", yid: "5",},
+  {title: "Yushukan", lat: 35.6917911, lng: 139.7505142, topic: "myDest", rating: 5, image: "http://s3-media3.fl.yelpcdn.com/bphoto/irDaVGuaZPCk1Y-G0hIOPA/ms.jpg", webPage: "http://www.yasukuni.or.jp/english/index.html" , snippet: "The Yūshūkan (遊就館) is a Japanese military and war museum located within Yasukuni Shrine in Chiyoda, Tokyo.", yid: "6",},
+  {title: "Ichiran", lat: 35.6665006, lng: 139.6975192, topic: "myDest", rating: 5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/jTcqGatAJT9c4fjbRGpPoQ/o.jpg", webPage: "http://www.ichiran.co.jp/index_hp.html", snippet: "You place your order at a vending machine, fill out a form (preferences), and then sit at an individual counter to slurp down your noodles.", yid: "7",},
+  {title: "Tokyo Tower", lat: 35.6571637, lng: 139.74859790000005, topic: "myDest", rating: 4, image: "http://s3-media1.fl.yelpcdn.com/bphoto/PqiUXpCMenrZMou0G6ktHQ/ms.jpg", webPage: "www.tokyotower.co.jp/eng/", snippet: "Tokyo Tower is a communications and observation tower located in the Shiba-koen district of Minato, Tokyo, Japan. At 332.9 metres, it is the second-tallest structure in Japan.", yid: "8",}
 ];
 var viewModel = new MyViewModel();
-var $listElem = $('#list-results');
 var map;
 
+
+// set knockout binding viewModel to the page
 $(document).ready(function () {
   ko.applyBindings(viewModel);
 });
-// console.log(self.mapOne);
-//
-// function initMap() {
-//  map = new google.maps.Map(document.getElementById('map'), {
-//     center: self.mapOne.center(),
-//     zoom: 11,
-//     disableDefaultUI: false,
-//     mapTypeId: google.maps.MapTypeId.TERRAIN
-// });
-// }
-//
-// initMap();
 
+//create the model for knockout
 function MyViewModel() {
     var self = this;
     self.mapOne = {
@@ -60,6 +52,7 @@ function MyViewModel() {
       }]
     };
 
+//Create google map and init
     self.initMap = function() {
      map = new google.maps.Map(document.getElementById('map'), {
         center: self.mapOne.center()[0],
@@ -69,10 +62,11 @@ function MyViewModel() {
     });
   };
 
+//call google map
   self.initMap();
-    // self.mapOne.sideMenu = ko.observableArray([]);
 
-    var Post = function(title, lat, lng, topic, rating, image, webPage, snippet) {
+//create model for map listings
+    var Post = function(title, lat, lng, topic, rating, image, webPage, snippet, yid) {
 
       this.postName = ko.observable(title);
       this.lat = ko.observable(lat);
@@ -83,20 +77,32 @@ function MyViewModel() {
       this.webPage = ko.observable(webPage);
       this.snip = ko.observable(snippet);
       this.showPost = ko.observable(true);
-
-
-      // this.showlink = function() {
-      //   self.showPost(true);
-      // };
-      // this.hidelink = function() {
-      //   self.showPost(false);
-      // };
-
-
+      this.postId = ko.observable(yid);
+      this.showListInfo = function() {
+        var post = this.postId();
+        $.each(self.mapOne.locations[0], function(key, value) {
+            return ko.utils.arrayFilter(value(), function(pin, key) {
+              if(pin.pinId() === post) {
+                pin.listInfoWindow();
+              }
+            });
+        });
+      };
+      this.hideListInfo = function() {
+        var post = this.postId();
+        $.each(self.mapOne.locations[0], function(key, value) {
+            return ko.utils.arrayFilter(value(), function(pin, key) {
+              if(pin.pinId() === post) {
+                pin.closeListInfoWindow();
+              }
+            });
+        });
+      };
 
     };
 
-    var Pin = function(map, name, lat, lng, topic, snippet) {
+//Create model for markers on the google map
+    var Pin = function(map, name, lat, lng, topic, snippet, yid) {
       var marker;
 
       this.name = ko.observable(name);
@@ -105,58 +111,63 @@ function MyViewModel() {
       this.topic = topic;
       this.title = name;
       this.snip = ko.observable(snippet);
+      this.pinId = ko.observable(yid);
+      this.listInfoWindow = function() {
+        infowindow.open(map, marker);
+      };
+      this.closeListInfoWindow = function() {
+        infowindow.close();
+      };
 
+      //set marker options and animations
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),
         animation: google.maps.Animation.DROP
       });
 
+      //create toggle function for bouncing markers
+      function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+
+      //set events for info window and click events
       google.maps.event.addListener(marker, 'mouseover', function() {
            infowindow.open(map, marker);
            setTimeout(function() { infowindow.close(); }, 5000);
          });
 
       google.maps.event.addListener(marker, 'click', function() {
-          //  alert("I am a Marker " + name);
            toggleBounce();
            infowindow.open(map, marker);
          });
-      var contentString = '<h5 class="bName">' + this.title + '</h5>' + '<div><strong>' + 'Snippet:' + '</strong></div>' + '<div>'  + this.snip() + '</div>';
+
+       //info window details
+       var contentString = '<h5 class="bName">' + this.title + '</h5>' + '<div><strong>' + 'Snippet:' + '</strong></div>' + '<div>'  + this.snip() + '</div>';
 
        var infowindow = new google.maps.InfoWindow({
          content: contentString,
-         maxWidth: 200
+         maxWidth: 300
        });
 
+      //set options for filtering map markers
       this.isVisible =ko.observable(false);
 
-      function toggleBounce() {
-        if (marker.getAnimation() !== null) {
-          marker.setAnimation(null);
-        } else {
-          marker.setAnimation(google.maps.Animation.BOUNCE);
-
-        }
-      }
-
-
       this.isVisible.subscribe(function(currentState) {
-        // console.log(currentState);
         if (currentState) {
-          //  console.log('make visible');
           marker.setMap(map);
         }else{
-          // console.log('make invisible');
           marker.setMap(null);
         }
 
       });
       this.isVisible(true);
-
     };
 
-
-   // Menu and map setup
+   // Navigation menu and web page function setup
     self.menu = ko.observableArray([
       {name: 'My Destinations', varName: 'myDestinations', url: '#', dataCol: 'myDest'},
       {name: 'Restaurant', varName: 'restaurant', url: '#', dataCol: 'tRest' },
@@ -167,54 +178,32 @@ function MyViewModel() {
     ]);
     self.chosenMenuId = ko.observable();
     self.chosenMenuData = ko.observable();
-    // self.displayResult = ko.observable(true);
     self.query = ko.observable('');
 
-
-
+    //function for creating new posts from yelp search or preloaded trip
     self.addNewPost = function(array, menu) {
-      var newPost = ko.utils.arrayMap(array, function(post) {
-            return new Post(post.title, post.lat, post.lng, post.topic, post.rating, post.image, post.webPage, post.snippet);
-      });
-      self.mapOne.dataCol[0][menu].push.apply(self.mapOne.dataCol[0][menu], newPost);
-
-
+      if(self.mapOne.dataCol[0][menu]().length > 0) {
+        return;
+      }else{
+        var newPost = ko.utils.arrayMap(array, function(post) {
+            return new Post(post.title, post.lat, post.lng, post.topic, post.rating, post.image, post.webPage, post.snippet, post.yid);
+        });
+        self.mapOne.dataCol[0][menu].push.apply(self.mapOne.dataCol[0][menu], newPost);
+      }
     };
 
+    //function for creating new map markers from yelp search or preloaded trip
     self.addNewMarker = function(array, menu) {
       var mapA = map;
       var newPin = ko.utils.arrayMap(array, function(post) {
-            return new Pin(mapA, post.title, post.lat, post.lng, post.topic, post.snippet);
+            return new Pin(mapA, post.title, post.lat, post.lng, post.topic, post.snippet, post.yid);
       });
       self.mapOne.locations[0][menu].push.apply(self.mapOne.locations[0][menu], newPin);
-
-
     };
 
-
-    self.clearMap = function( cTopic ) {
-        self.mapOne.visible()[0].restaurant= 'false';
-        self.mapOne.visible()[0].landmarks= 'false';
-        self.mapOne.visible()[0].hotels= 'false';
-        self.mapOne.visible()[0].tokyo= 'false';
-        self.mapOne.visible()[0].myDestinations= 'false';
-        self.mapOne.visible()[0][cTopic] = 'true';
-
-      };
-
-    // Actions on data
+    // Menu actions and data request calls
     self.goToMenu = function(menu) {
-      console.log(menu.name);
-      if (menu.name === "clear") {
-        console.log(self.mapOne.locations()[0]);
-        console.log(self.mapOne.locations()[0].isVisible());
-        self.mapOne.locations()[0].isVisible(false);
-        console.log(self.mapOne.locations()[0].isVisible());
-        return;
-      }
       if (menu.name === "My Destinations") {
-        console.log(menu.dataCol);
-        $('#list-results').empty();
         self.addNewPost(tokyoTrip, menu.dataCol);
         self.addNewMarker(tokyoTrip, menu.dataCol);
 
@@ -223,16 +212,15 @@ function MyViewModel() {
       }
       self.chosenMenuId(menu);
       self.mapOne.clearM(menu.dataCol);
-      self.clearMap(menu.varName);
     };
 
+    //Initial Map setup for tokyo trip
     self.goToMenu(self.menu()[0]);
 
 
-    //Yelp data
+    //Yelp data request
     self.getRequest = function( searchTopic, dataCol ) {
       var yelpPost = [];
-      $('#list-results').empty();
       var catSelect= searchTopic;
       var auth = {
 				//
@@ -272,8 +260,8 @@ function MyViewModel() {
 
       var parameterMap = OAuth.getParameterMap(message.parameters);
 			parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature);
-			//console.log(parameterMap);
 
+      // yelp ajax request
       $.ajax({
 				'url' : message.action,
 				'data' : parameterMap,
@@ -291,31 +279,50 @@ function MyViewModel() {
             var yelpLocationLat = yresultData[i].location.coordinate.latitude;
             var yelpLocationLng = yresultData[i].location.coordinate.longitude;
             var yelpLocation = yelpLocationLat + ', ' + yelpLocationLng;
-            var yelpID = yresultData[i].id;
+            var yelpID = searchTopic + i;
+            console.log(yelpID);
             var yelpSnip = yresultData[i].snippet_text;
-            var yelpResult = {title: yelpName, lat: yelpLocationLat, lng: yelpLocationLng, topic: dataCol, rating: yelpRating, image: yelpImage, webPage: yelpURL, snippet: yelpSnip };
+            var yelpResult = {title: yelpName, lat: yelpLocationLat, lng: yelpLocationLng, topic: dataCol, rating: yelpRating, image: yelpImage, webPage: yelpURL, snippet: yelpSnip, yid: yelpID, };
+            //create array in for loop and push when for loop complete
             yelpPost.push(yelpResult);
-            // self.mapOne.locations(yelpResult);
-
 
           }
-
+          //push to observables outside of for loop to reduce observable updates
           self.addNewPost(yelpPost, dataCol);
           self.addNewMarker(yelpPost, dataCol);
 
+          //clear yelp post array for next search
           yelpPost = [];
 
 
-				}
+				},
+        // Handle ajax errors
+        error: function(jqXHR, exception) {
+            if (jqXHR.status === 0) {
+                alert('Not connect.n Verify Network.');
+            } else if (jqXHR.status == 404) {
+                alert('Requested page not found. [404]');
+            } else if (jqXHR.status == 500) {
+                alert('Internal Server Error [500].');
+            } else if (exception === 'parsererror') {
+                alert('Requested JSON parse failed.');
+            } else if (exception === 'timeout') {
+                alert('Time out error.');
+            } else if (exception === 'abort') {
+                alert('Ajax request aborted.');
+            } else {
+                alert('Uncaught Error.n' + jqXHR.responseText);
+            }
+        }
 			});
 
     };
 
+    //function for filtering posts based on search submission
     self.searchPosts = ko.computed(function () {
       var search = self.query().toLowerCase();
       $.each(self.mapOne.dataCol[0], function(key, value) {
           return ko.utils.arrayFilter(value(), function(post, key) {
-            console.log(post);
             var doesMatch = post.postName().toLowerCase().indexOf(search) >= 0;
               post.showPost(doesMatch);
               return doesMatch;
@@ -324,6 +331,7 @@ function MyViewModel() {
     });
   });
 
+  //function for filtering seperate menu selection posts
     self.filteredPosts = ko.computed(function () {
       var filterPost = [];
       var currentTopic = self.mapOne.clearM();
@@ -336,6 +344,7 @@ function MyViewModel() {
 
         });
 
+        //Search function for Map markers based on search submission
         self.searchPins = ko.computed(function() {
           var search = self.query().toLowerCase();
 
@@ -348,6 +357,7 @@ function MyViewModel() {
           });
         });
 
+        //Marker pin filter based on menu selection
         self.filteredPins = ko.computed(function () {
           var filterPin = [];
           var currentTopic = self.mapOne.clearM();
@@ -360,6 +370,6 @@ function MyViewModel() {
           });
 
 
-            });
+        });
 
 }

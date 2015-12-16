@@ -1,4 +1,6 @@
 #map {
+  position: fixed;
+  top: 70px;
   height: 100vh;
   /*border: solid red 2px;*/
 }

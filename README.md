@@ -2,12 +2,12 @@
 
 Neighborhood map project 5 is developed for Front-End Nanodegree at Udacity.
 
-* This project is built using Google Maps API, Foursquare API, Yelp API and knockoutjs framework.
+* This project is built using Google Maps API, Yelp API and knockoutjs framework.
   Features Included:
-    * A full-screen map using the Google Maps API.
+    * A half-screen map using the Google Maps API.
     * Map markers identifying the places I want to visit in the Tokyo neighborhood.
-    * Yelp Search bar functionality.
-    * Foursquare API is used to show related info. of the location.
+    * Search bar functionality.
+    * List of places to visit with links to yelp and the businesses websites
 
 
 [Demo](http://mehkai.github.io/neighborhood-map)

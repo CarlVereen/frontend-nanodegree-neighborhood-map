@@ -36,7 +36,6 @@
               <!-- <h5 data-bind="text: query"></h5> -->
               <input id="search "type="search" name="search" class="form-control" placeholder="Search" data-bind="textInput: query">
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
           </form>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
@@ -45,11 +44,14 @@
       <div class="row">
             <div  class="col-xs-6" id="sideList" data-bind="">
               <ul class='list-group' data-bind="foreach: filteredPosts">
-                <button type="button" class="list-group-item" data-bind="visible: showPost"><span class="badge" >Rating <span data-bind="text: rating"></span></span><img width="100px" height="100px" data-bind="attr:{ src: image, alt: postName }"  /><a data-bind="text: postName, attr: { url: webPage }" ></a></button>
+                <button type="button" class="list-group-item" data-bind="visible: showPost, event: {mouseover: showListInfo, mouseout: hideListInfo}"><span class="badge" >Rating <span data-bind="text: rating"></span></span><img width="100px" height="100px" data-bind="attr:{ src: image, alt: postName }"  /><a data-bind="text: postName, attr: { href: webPage }" ></a></button>
               </ul>
              </div>
-            <div  class="col-xs-6" id="map" ></div>
-             <!-- / data display element -->
+             <div class="col-xs-6 side-bar outer">
+               <div  class="fixed col-xs-12" id="map" >
+
+               </div>
+             </div>
       </div> <!--/ row 1 -->
     </div><!-- /.container  for map and lists -->
 
