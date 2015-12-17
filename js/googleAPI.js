@@ -10,14 +10,19 @@ var tokyoTrip = [
   {title: "Ichiran", lat: 35.6665006, lng: 139.6975192, topic: "myDest", rating: 5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/jTcqGatAJT9c4fjbRGpPoQ/o.jpg", webPage: "http://www.ichiran.co.jp/index_hp.html", snippet: "You place your order at a vending machine, fill out a form (preferences), and then sit at an individual counter to slurp down your noodles.", yid: "7",},
   {title: "Tokyo Tower", lat: 35.6571637, lng: 139.74859790000005, topic: "myDest", rating: 4, image: "http://s3-media1.fl.yelpcdn.com/bphoto/PqiUXpCMenrZMou0G6ktHQ/ms.jpg", webPage: "www.tokyotower.co.jp/eng/", snippet: "Tokyo Tower is a communications and observation tower located in the Shiba-koen district of Minato, Tokyo, Japan. At 332.9 metres, it is the second-tallest structure in Japan.", yid: "8",}
 ];
-var viewModel = new MyViewModel();
-var map;
+var viewModel, InfoWindow,
+    map;
 
-
-// set knockout binding viewModel to the page
-$(document).ready(function () {
+// Google API callback function to create MyViewModel and apply Knockout bindings
+function initMap() {
+  viewModel = new MyViewModel();
   ko.applyBindings(viewModel);
+  infowindow = new google.maps.InfoWindow({
+  content: "",
+  maxWidth: 300
 });
+}
+
 
 //create the model for knockout
 function MyViewModel() {
@@ -78,6 +83,17 @@ function MyViewModel() {
       this.snip = ko.observable(snippet);
       this.showPost = ko.observable(true);
       this.postId = ko.observable(yid);
+      this.bounce = function() {
+        var post = this.postId();
+        $.each(self.mapOne.locations[0], function(key, value) {
+            return ko.utils.arrayFilter(value(), function(pin, key) {
+              if(pin.pinId() === post) {
+                pin.markerBounce();
+              }
+            });
+        });
+
+      };
       this.showListInfo = function() {
         var post = this.postId();
         $.each(self.mapOne.locations[0], function(key, value) {
@@ -104,6 +120,7 @@ function MyViewModel() {
 //Create model for markers on the google map
     var Pin = function(map, name, lat, lng, topic, snippet, yid) {
       var marker;
+      var self = this;
 
       this.name = ko.observable(name);
       this.lat = ko.observable(lat);
@@ -112,12 +129,21 @@ function MyViewModel() {
       this.title = name;
       this.snip = ko.observable(snippet);
       this.pinId = ko.observable(yid);
+      this.contentString = '<h5 class="bName">' + this.title + '</h5>' + '<div><strong>' + 'Snippet:' + '</strong></div>' + '<div>'  + this.snip() + '</div>';
       this.listInfoWindow = function() {
-        infowindow.open(map, marker);
+        infowindow.setContent(self.contentString); // set content
+        infowindow.open(map, marker); // open infowindow
       };
       this.closeListInfoWindow = function() {
-        infowindow.close();
+        infowindow.setContent(self.contentString); // set content
+        infowindow.close(); // open infowindow
       };
+
+
+      this.markerBounce = function() {
+        toggleBounce();
+      };
+
 
       //set marker options and animations
       marker = new google.maps.Marker({
@@ -131,27 +157,23 @@ function MyViewModel() {
           marker.setAnimation(null);
         } else {
           marker.setAnimation(google.maps.Animation.BOUNCE);
+          window.setTimeout(function() {
+            marker.setAnimation(null);
+          }, 2100);
         }
       }
 
       //set events for info window and click events
       google.maps.event.addListener(marker, 'mouseover', function() {
-           infowindow.open(map, marker);
-           setTimeout(function() { infowindow.close(); }, 5000);
-         });
+        infowindow.setContent(self.contentString); // set infowindow content
+        infowindow.open(map, marker); // open infowindow
+      });
 
       google.maps.event.addListener(marker, 'click', function() {
-           toggleBounce();
-           infowindow.open(map, marker);
-         });
-
-       //info window details
-       var contentString = '<h5 class="bName">' + this.title + '</h5>' + '<div><strong>' + 'Snippet:' + '</strong></div>' + '<div>'  + this.snip() + '</div>';
-
-       var infowindow = new google.maps.InfoWindow({
-         content: contentString,
-         maxWidth: 300
-       });
+        infowindow.setContent(self.contentString); // set infowindow content
+        infowindow.open(map, marker); // open infowindow
+        toggleBounce(); // bounce map marker
+      });
 
       //set options for filtering map markers
       this.isVisible =ko.observable(false);

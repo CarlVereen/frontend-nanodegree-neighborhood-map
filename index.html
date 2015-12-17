@@ -8,13 +8,14 @@
       <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 
 
+
   </head>
   <body>
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"  aria-expanded="false">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -44,7 +45,7 @@
       <div class="row">
             <div  class="col-xs-6" id="sideList" data-bind="">
               <ul class='list-group' data-bind="foreach: filteredPosts">
-                <button type="button" class="list-group-item" data-bind="visible: showPost, event: {mouseover: showListInfo, mouseout: hideListInfo}"><span class="badge" >Rating <span data-bind="text: rating"></span></span><img width="100px" height="100px" data-bind="attr:{ src: image, alt: postName }"  /><a data-bind="text: postName, attr: { href: webPage }" ></a></button>
+                <button type="button" class="list-group-item" data-bind="visible: showPost, event: {mouseover: showListInfo, mouseout: hideListInfo, click: bounce}"><span class="badge" >Rating <span data-bind="text: rating"></span></span><img width="100px" height="100px" data-bind="attr:{ src: image, alt: postName }"  /><a data-bind="text: postName, attr: { href: webPage }" ></a></button>
               </ul>
              </div>
              <div class="col-xs-6 side-bar outer">
@@ -55,15 +56,15 @@
       </div> <!--/ row 1 -->
     </div><!-- /.container  for map and lists -->
 
-
-    <script type="text/javascript"
-    	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD61th9_qlpEsR7QjNn4UrpnswZgEReK3E">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="js/googleAPI.js"></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD61th9_qlpEsR7QjNn4UrpnswZgEReK3E&callback=initMap"></script>
     <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
     <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
-    <script src="js/googleapi.js"></script>
+
+
 
       </body>
     </html>
