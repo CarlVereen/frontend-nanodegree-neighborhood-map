@@ -10,14 +10,14 @@ var tokyoTrip = [
   {title: "Ichiran", lat: 35.6665006, lng: 139.6975192, topic: "myDest", rating: 5, image: "http://s3-media4.fl.yelpcdn.com/bphoto/jTcqGatAJT9c4fjbRGpPoQ/o.jpg", webPage: "http://www.ichiran.co.jp/index_hp.html", snippet: "You place your order at a vending machine, fill out a form (preferences), and then sit at an individual counter to slurp down your noodles.", yid: "7",},
   {title: "Tokyo Tower", lat: 35.6571637, lng: 139.74859790000005, topic: "myDest", rating: 4, image: "http://s3-media1.fl.yelpcdn.com/bphoto/PqiUXpCMenrZMou0G6ktHQ/ms.jpg", webPage: "www.tokyotower.co.jp/eng/", snippet: "Tokyo Tower is a communications and observation tower located in the Shiba-koen district of Minato, Tokyo, Japan. At 332.9 metres, it is the second-tallest structure in Japan.", yid: "8",}
 ];
-var viewModel, InfoWindow,
+var viewModel, infoWindow,
     map;
 
 // Google API callback function to create MyViewModel and apply Knockout bindings
 function initMap() {
   viewModel = new MyViewModel();
   ko.applyBindings(viewModel);
-  infowindow = new google.maps.InfoWindow({
+  infoWindow = new google.maps.InfoWindow({
   content: "",
   maxWidth: 300
 });
@@ -131,12 +131,12 @@ function MyViewModel() {
       this.pinId = ko.observable(yid);
       this.contentString = '<h5 class="bName">' + this.title + '</h5>' + '<div><strong>' + 'Snippet:' + '</strong></div>' + '<div>'  + this.snip() + '</div>';
       this.listInfoWindow = function() {
-        infowindow.setContent(self.contentString); // set content
-        infowindow.open(map, marker); // open infowindow
+        infoWindow.setContent(self.contentString); // set content
+        infoWindow.open(map, marker); // open infoWindow
       };
       this.closeListInfoWindow = function() {
-        infowindow.setContent(self.contentString); // set content
-        infowindow.close(); // open infowindow
+        infoWindow.setContent(self.contentString); // set content
+        infoWindow.close(); // open infoWindow
       };
 
 
@@ -165,13 +165,13 @@ function MyViewModel() {
 
       //set events for info window and click events
       google.maps.event.addListener(marker, 'mouseover', function() {
-        infowindow.setContent(self.contentString); // set infowindow content
-        infowindow.open(map, marker); // open infowindow
+        infoWindow.setContent(self.contentString); // set infoWindow content
+        infoWindow.open(map, marker); // open infoWindow
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(self.contentString); // set infowindow content
-        infowindow.open(map, marker); // open infowindow
+        infoWindow.setContent(self.contentString); // set infoWindow content
+        infoWindow.open(map, marker); // open infoWindow
         toggleBounce(); // bounce map marker
       });
 
